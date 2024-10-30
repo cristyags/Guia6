@@ -250,3 +250,61 @@ document.getElementById("idForm").onsubmit = function() {
     }
     return true; 
 };
+
+// Agregar evento de edición y eliminación de pacientes
+function editarPaciente(index) {
+    const paciente = arrayPaciente[index];
+    // Llenamos el formulario con los datos del paciente seleccionado
+    inputNombre.value = paciente[0];
+    inputApellido.value = paciente[1];
+    inputFechaNacimiento.value = paciente[2];
+    inputRdMasculino.checked = paciente[3] === "Hombre";
+    inputRdFemenino.checked = paciente[3] === "Mujer";
+    cmbPais.value = Array.from(cmbPais.options).find(option => option.text === paciente[4]).value;
+    inputDireccion.value = paciente[5];
+
+    // Eliminamos el paciente de la lista temporalmente para evitar duplicados al guardar
+    arrayPaciente.splice(index, 1);
+
+    // Notificación para el usuario
+    mensaje.innerHTML = "Puede editar los datos y guardarlos nuevamente.";
+    toast.show();
+}
+
+function eliminarPaciente(index) {
+    // Eliminamos el paciente del arreglo
+    arrayPaciente.splice(index, 1);
+
+    // Actualizamos la tabla
+    imprimirPacientes();
+
+    // Notificación para el usuario
+    mensaje.innerHTML = "Paciente eliminado correctamente.";
+    toast.show();
+}
+
+// Modificar la función imprimirFilas para agregar los eventos de los botones Editar y Eliminar
+function imprimirFilas() {
+    let $fila = "";
+    arrayPaciente.forEach((element, index) => {
+        $fila += `<tr>
+            <td scope="row" class="text-center fw-bold">${index + 1}</td>
+            <td>${element[0]}</td>
+            <td>${element[1]}</td>
+            <td>${element[2]}</td>
+            <td>${element[3]}</td>
+            <td>${element[4]}</td>
+            <td>${element[5]}</td>
+            <td>
+                <button type="button" class="btn btn-primary" onclick="editarPaciente(${index})" alt="Editar">
+                    <i class="bi bi-pencil-square"></i>
+                </button>
+                <button type="button" class="btn btn-danger" onclick="eliminarPaciente(${index})" alt="Eliminar">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    return $fila;
+}
